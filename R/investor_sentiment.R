@@ -18,7 +18,7 @@
 #'
 
 ## 1. SETTINGS ## ##############################################################
-## Definir parâmetros
+## Definir par?metros
 ## 
 ## SOBRE O PERIODO:
 ##
@@ -52,18 +52,10 @@ PERIOD.DEZ <- paste(PERIOD.n,"-12/", PERIOD.N-2, "-12", sep="")
 
 ## Instalar pacotes / Install packages -----------------------------------------
 ip <- installed.packages()
-pkg <- "zoo"       ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "dynlm"     ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "lubridate" ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "Quandl"    ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "TTR"       ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "XML"       ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "xts"       ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "lmtest"    ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "sandwich"  ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-pkg <- "HH"        ; if ( !(pkg %in% ip) ) { install.packages(pkg) }
-
-rm(list=c("ip","pkg"))
+for (i in c("zoo", "dynlm", "lubridate", "Quandl", "TTR", "XML", "xts", "lmtest", "sandwich", "HH")){
+  if ( !(i %in% ip) ) { install.packages(i) }
+}
+rm(list=c("ip","i"))
 
 ## Carregar pacotes / Load packages --------------------------------------------
 library("zoo")
@@ -77,7 +69,7 @@ library("lmtest")
 library("sandwich")
 library(HH)
 
-## Executar minhas funçoes / Run my functions
+## Executar minhas fun?oes / Run my functions
 source("R/functions.R")
 
 ## 2. LOAD DATA AND CLEAN ## ###################################################
@@ -182,7 +174,7 @@ f_IN            <- filterGreaterThan(yNegociab, 0.01, PERIOD.n, PERIOD.N, "jun")
 # ySample1 <- filterNoFinancial(ySample0, "Input/dbStocks.csv")
 # f_NoFinancial <- ySample1
 # 
-# ## Filtrar ações com cotações 24 meses consecutivos
+# ## Filtrar a??es com cota??es 24 meses consecutivos
 # ySample2 <- filterNo24months(mPrices, ySample1)
 # 
 # ## Filtro Valor de Mercado em 30/06/n e 31/12/n-1
@@ -218,11 +210,11 @@ f_IN            <- filterGreaterThan(yNegociab, 0.01, PERIOD.n, PERIOD.N, "jun")
 # rownames (yMomentum) <- rownames(yVolumeJun)
 
 ## 3. INVESTOR SENTIMENT INDEX ## ##############################################
-## 3. Índice de Sentimento
+## 3. ?ndice de Sentimento
 ## 3.1. Ler/Calcular Proxies
-## Temporalidade das Proxies: Selecionar proxies que serão defasadas
-## 3.2. Índice de Sentimento não Ortogonalizado
-## 3.3. Índice de Sentimento Ortogonalizado à variáveis macroeconômicas  
+## Temporalidade das Proxies: Selecionar proxies que ser?o defasadas
+## 3.2. ?ndice de Sentimento n?o Ortogonalizado
+## 3.3. ?ndice de Sentimento Ortogonalizado ? vari?veis macroecon?micas  
 
 ## 3.1 Read/Compute Proxies # ==================================================
 
@@ -373,7 +365,7 @@ as.dist(round(cor(mBestProxies),2))                  # Correlations between them
 ## Estimating first component of the best proxies
 PCAstep2 <-prcomp(mBestProxies, scale=T, center = TRUE)
 
-## Correlation with PC1 of the 1º step
+## Correlation with PC1 of the 1? step
 abs(cor(PCAstep1$x[,"PC1"],PCAstep2$x[,"PC1"]))
 
 # ## Proportion of Variance
@@ -435,7 +427,7 @@ tmp <- c(year(row.names(mProxiesOrtog)[1]), month(row.names(mProxiesOrtog)[1]))
 Sentiment <- ts(PCAstep3$x[,"PC1"], start=tmp, frequency=12)
 SentNO    <- ts(PCAstep2$x[,"PC1"], start=tmp, frequency=12)
 
-## Plotar Sentimento e SentimentoNO (Não Ortogonalizado)
+## Plotar Sentimento e SentimentoNO (N?o Ortogonalizado)
 plot(SentNO*-1, col="dark red", lty="dashed")
 lines(Sentiment, col="blue")
 abline(h = 0, lty = 3, col="gray")
@@ -457,7 +449,7 @@ plot(Sent, col="dark red", type="l", main="ISI e IBOVESPA")
 lines(IBV, col="green")
 lines(scale(SentNO*-1), col="dark red", lty="dashed")
 
-## Versões Alternativas do Indice Conforme Literatura # =======================
+## Vers?es Alternativas do Indice Conforme Literatura # =======================
 
 ## Sentiment YearEnd
 # Regredir (JUL a JUN) com Sentimento do final do ano anterior
@@ -493,8 +485,8 @@ SentLJ <- ts(tmp[sort(rep(1:length(tmp),12))],
 ## 5.1 Serie do Retorno do Ativos Livre de Risco
 ## 5.2 Serie do Retorno da Carteira de Mercado
 ## 5.3 Construir Carteiras por Fatores
-## 5.3 Fator Tamanho (Interação Tamanho e BM)
-## 5.4 Fator BM      (Interação BM e Tamanho)
+## 5.3 Fator Tamanho (Intera??o Tamanho e BM)
+## 5.4 Fator BM      (Intera??o BM e Tamanho)
 ## 5.5 Serie de retorno dos demais fatores (MOM, LIQ)
 ##       Fator Momento
 ##       Fator Liquidez
@@ -518,14 +510,14 @@ mMVclass <- data.frame(lapply(mMVclass, as.numeric ), row.names=rownames(mMVclas
 tmp <- computeMarketPortfolio(mReturns, mMVclass, f_MKT) ; rm(f_MKT)
 MKT <- ts(tmp$rVW, start=c(PERIOD.n,07), frequency=12) ; rm(tmp)
 
-## Baixando Carteira de Mercado (Ibovespa) p/ COMPARAÇÃO
+## Baixando Carteira de Mercado (Ibovespa) p/ COMPARA??O
 IBV  <- Quandl("BCB/7845", type="ts", collapse="monthly", sort="asc",
                #               transformation="rdiff",
                trim_start=as.Date(paste(PERIOD.n+1,"-06-01", sep="")),
                trim_end=as.Date(paste(PERIOD.N,"-06-01", sep="")))
 IBV <- diff(log(IBV),1)
 
-#' Correlação entre a carteira calculada e o IBOVESPA
+#' Correla??o entre a carteira calculada e o IBOVESPA
 #' Com empresas Financeiras = 0.96
 as.dist(cor(merge(MKT=as.zoo(MKT), IBOV=as.zoo(IBV), all=F)))
 
@@ -584,7 +576,7 @@ aF_BM_L <- portfolioSelectAssets(yBM,3,3) * 1 # Growth (Low BM)
 aF_MOM_W <- portfolioSelectAssets(yMomentum,3,1) * 1 # Wins
 aF_MOM_L <- portfolioSelectAssets(yMomentum,3,3) * 1 # Loss
 
-## Carteiras a partir da Interação
+## Carteiras a partir da Intera??o
 ##
 ## Conforme French Site
 ## http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html
@@ -712,14 +704,14 @@ x[x[,3]<=0.1,]                                          # Long
 # reportRegVW(SentLJ, 0, FF3F)
 
 ## Combinadas apenas as anomalias com Alpha significante
-# Verificar as que são significantes
+# Verificar as que s?o significantes
 unlist(lapply(LSew, function (x) NW(dynlm(x$LS ~ + FF3F))[1,4]<0.01))
 ls_COMBew$LONG  <- (ls_BMew$LONG   + ls_MOMew$LONG  + ls_VOLew$LONG  + ls_LPew$LONG  + ls_EBTDAew$LONG  + ls_GSew$LONG  + ls_ROAew$LONG  + ls_AGew$LONG  + ls_INVew$LONG ) / 9
 ls_COMBew$SHORT <- (ls_BMew$SHORT  + ls_MOMew$SHORT + ls_VOLew$SHORT + ls_LPew$SHORT + ls_EBTDAew$SHORT + ls_GSew$SHORT + ls_ROAew$SHORT + ls_AGew$SHORT + ls_INVew$SHORT) / 9
 ls_COMBew$LS    <- ls_COMBew$LONG - ls_COMBew$SHORT
 NW(dynlm(ls_COMBew$LS ~ FF3F))
 
-# Verificar as que são significantes
+# Verificar as que s?o significantes
 unlist(lapply(LSvw, function (x) NW(dynlm(x$LS ~ + FF3F))[1,4]<0.01))
 ls_COMBvw$LONG  <- (ls_TAMvw$LONG  + ls_BMvw$LONG   + ls_VOLvw$LONG  + ls_LPvw$LONG  + ls_ENDIVvw$LONG  + ls_ROAvw$LONG ) / 6
 ls_COMBvw$SHORT <- (ls_TAMvw$SHORT + ls_BMvw$SHORT  + ls_VOLvw$SHORT + ls_LPvw$SHORT + ls_ENDIVvw$SHORT + ls_ROAvw$SHORT) / 6
@@ -760,20 +752,20 @@ round(as.dist(cor(data.frame(TAM   = (ls_TAM$LONG - ls_TAM$SHORT),
 ## 6. INVESTOR SENTIMENT AND ANOMALIES ## ######################################
 ##    Sentimento do Investidor e Anomalias
 ##
-## 6.1. Análise das Médias após períodos de Sentimento Alto e Baixo
-## 6.2. Modelos Econométricos
+## 6.1. An?lise das M?dias ap?s per?odos de Sentimento Alto e Baixo
+## 6.2. Modelos Econom?tricos
 ## 6.2.1 Extremos e sentimento defasado
 ## 6.2.2 Extremos, sentimeto defasado e fatores de risco
 ## 6.2.3 Extremos, dummys
 
-#== 6.1 Análise de Médias # ====================================================
+#== 6.1 An?lise de M?dias # ====================================================
 
-## LONG-SHORT (Verificar se a Anomalia é mais forte após Alto Sentimento)
-# H .:. As anomalias são mais fortes após alto sentimento do que baixo
+## LONG-SHORT (Verificar se a Anomalia ? mais forte ap?s Alto Sentimento)
+# H .:. As anomalias s?o mais fortes ap?s alto sentimento do que baixo
 reportAvarege("LongShort", Sent, 12)
 
-## SHORT (Espera-se que seja ainda mais negativo após alto sentimento)
-# H .:. Short é mais baixa (lucrativa) apos alto sentimento do que baixo ( H-L < 0 )
+## SHORT (Espera-se que seja ainda mais negativo ap?s alto sentimento)
+# H .:. Short ? mais baixa (lucrativa) apos alto sentimento do que baixo ( H-L < 0 )
 reportAvaregeEW("Short", Sentiment, 12)
 reportAvaregeVW("Long", Sentiment, 12)
 
