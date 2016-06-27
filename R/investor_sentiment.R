@@ -50,24 +50,13 @@ PERIOD.JUN <- paste(PERIOD.n+1,"-06/", PERIOD.N-1, "-06", sep="")
 PERIOD.DEZ <- paste(PERIOD.n,"-12/", PERIOD.N-2, "-12", sep="")
 #                      DEZ/n     a    DEZ/(N-2) (Ex. 1999-12/2012-12)
 
-## Instalar pacotes / Install packages -----------------------------------------
+## Instalar/Carregar pacotes / Install/Load packages -----------------------------------------
 ip <- installed.packages()
 for (i in c("zoo", "dynlm", "lubridate", "Quandl", "TTR", "XML", "xts", "lmtest", "sandwich", "HH")){
   if ( !(i %in% ip) ) { install.packages(i) }
+  if (i=="Quandl") { library(i, character.only = T) ; Quandl.auth("WP2rt8HsRo3kjWsRkLY5") } else library(i, character.only = T)
 }
 rm(list=c("ip","i"))
-
-## Carregar pacotes / Load packages --------------------------------------------
-library("zoo")
-library("dynlm")
-library("lubridate")
-library("Quandl") ; Quandl.auth("WP2rt8HsRo3kjWsRkLY5")
-library("xts")
-library("TTR")
-library("XML")
-library("lmtest")
-library("sandwich")
-library(HH)
 
 ## Executar minhas fun?oes / Run my functions
 source("R/functions.R")
